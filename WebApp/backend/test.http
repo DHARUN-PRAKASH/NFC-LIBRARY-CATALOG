@@ -1,0 +1,33 @@
+### NFC Data Test - Student
+POST http://localhost:5000/attendance
+Content-Type: application/json
+
+{
+  "nfc_data": "Student Details Name: dharun G Department: Al & DS Roll-no: 22AD108 Mobile: 1234567890"
+}
+
+### NFC Data Test - Book
+POST http://localhost:5000/nfc
+Content-Type: application/json
+
+{
+  "nfc_data": "Book Details title: \"The Enchanted Forest\" author: \"Ava Green\" genre: \"Fantasy\""
+}
+
+
+
+### NFC Data Test - Book
+POST http://localhost:5000/nfc
+Content-Type: application/json
+
+{
+  "nfc_data": "Book Details title: \"Introduction to AI\" author: \"John Doe\" genre: \"Technology\""
+}
+
+### NFC Data Test - Unrecognized Data
+POST http://localhost:5000/nfc
+Content-Type: application/json
+
+{
+  "nfc_data": "Unknown Details title: \"Some title\" author: \"Unknown Author\" genre: \"Unknown Genre\""
+}
