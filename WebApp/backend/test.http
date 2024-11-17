@@ -3,7 +3,7 @@ POST http://localhost:5000/attendance
 Content-Type: application/json
 
 {
-  "nfc_data": "Student Details Name: dharun G Department: Al & DS Roll-no: 22AD108 Mobile: 1234567890"
+  "nfc_data": "Student Details Name: arun Department: Al & DS Roll-no: 22AD110 Mobile: 1234567890"
 }
 
 ### NFC Data Test - Book
@@ -31,3 +31,47 @@ Content-Type: application/json
 {
   "nfc_data": "Unknown Details title: \"Some title\" author: \"Unknown Author\" genre: \"Unknown Genre\""
 }
+
+### SIGNIN
+POST http://localhost:5000/signin
+Content-Type: application/json
+
+{
+    "username":"dp",
+    "password":"0000"
+}
+
+### Session selector 
+POST http://localhost:5000/library/select-action
+Content-Type: application/json
+
+{
+  "action": "return"
+  
+}
+
+### NFC Data Test - Book
+POST http://localhost:5000/library
+Content-Type: application/json
+
+ {
+  "nfc_data": "Student Details Name: arun G Department: Al & DS Roll-no: 22AD110 Mobile: 1234567890"
+}
+
+### NFC Data Test - Book
+POST http://localhost:5000/library
+Content-Type: application/json
+
+{
+  "nfc_data":"Book Details title: The Enchanted Forest  author: Ava Green genre: Fantasy "
+
+}
+
+### Close the active session
+POST http://localhost:5000/library/stop-session
+Content-Type: application/json
+
+
+
+
+

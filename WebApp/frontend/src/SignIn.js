@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,7 +9,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Player } from "@lottiefiles/react-lottie-player"; // Correct import for Player
+import { Player } from "@lottiefiles/react-lottie-player";
+import { signInUser } from "./api"; // Import the API service function
 
 const PageContainer = styled.div`
   display: flex;
@@ -54,53 +55,44 @@ const BackDrop = styled.div`
   background: #32348c;
 `;
 
-const HeaderContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const HeaderText = styled.div`
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 1.24;
-  color: #fff;
-  z-index: 50;
-`;
-
-const SmallText = styled.div`
-  font-size: 11px;
-  font-weight: 500;
-  color: #fff;
-  z-index: 10;
-`;
-
-const LottieWrapper = styled.div`
-  position: absolute;
-  top: 49px;  // Adjust to move the animation closer to the top of the container
-  left: 50%;  // Center it horizontally
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 150px;  // Increase the max-width to make the animation larger
-  height: auto;  // Automatically adjust the height based on width
-`;
-
-
 export default function SignIn() {
   const defaultTheme = createTheme();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await signInUser(formData.username, formData.password);
+      if (response && response.data) {
+        sessionStorage.setItem("logged", JSON.stringify(response.data));
+        window.location.assign("/");
+        alert("Login Successful!");
+      } else {
+        alert("Invalid Credentials");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      setError("Invalid username or password. Please try again!");
+    }
+  };
+  
 
   return (
     <PageContainer>
       <BoxContainer>
         <TopContainer>
           <BackDrop />
-          <LottieWrapper>
-            {/* Use the Player component from lottie library */}
+          <div style={{ position: "absolute", top: "49px", left: "50%", transform: "translateX(-50%)", width: "150px" }}>
             <Player
               src="https://lottie.host/9c981348-6b67-47a3-a620-126fd870b0fb/w463329p36.json"
               background="transparent"
@@ -108,13 +100,11 @@ export default function SignIn() {
               loop
               autoplay
             />
-          </LottieWrapper>
-          <HeaderContainer style={{marginBottom:'40px'}}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <HeaderText>Welcome Back !!!</HeaderText>
-            </div>
-            <SmallText>Please sign-in to continue!</SmallText>
-          </HeaderContainer>
+          </div>
+          <div style={{ marginBottom: "40px", textAlign: "center" }}>
+            <h2 style={{ color: "#fff" }}>Welcome Back !!!</h2>
+            <p style={{ color: "#fff", fontSize: "14px" }}>Please sign-in to continue!</p>
+          </div>
         </TopContainer>
         <div style={{ paddingTop: "30px" }}>
           <ThemeProvider theme={defaultTheme}>
@@ -128,54 +118,55 @@ export default function SignIn() {
               }}
             >
               <CssBaseline />
-              <div className="mb-3 text-center"></div>
-              <Box component="form" noValidate sx={{ mt: 1 }}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  name="username"
-                  autoComplete="username"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  autoComplete="current-password"
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton onClick={handleTogglePasswordVisibility}>
-                        {showPassword ? (
-                          <VisibilityOffIcon />
-                        ) : (
-                          <VisibilityIcon />
-                        )}
-                      </IconButton>
-                    ),
-                  }}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    borderRadius: 20,
-                    backgroundColor: "#32348c",
-                    color: "#fff",
-                  }}
-                >
-                  Sign In
-                </Button>
-              </Box>
+              <form onSubmit={handleSubmit}>
+  <TextField
+    margin="normal"
+    required
+    fullWidth
+    id="username"
+    label="Username"
+    name="username"
+    value={formData.username}
+    onChange={handleChange}
+    autoComplete="username"
+    autoFocus
+  />
+  <TextField
+    margin="normal"
+    required
+    fullWidth
+    name="password"
+    label="Password"
+    type={showPassword ? "text" : "password"}
+    id="password"
+    value={formData.password}
+    onChange={handleChange}
+    autoComplete="current-password"
+    InputProps={{
+      endAdornment: (
+        <IconButton onClick={handleTogglePasswordVisibility}>
+          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+        </IconButton>
+      ),
+    }}
+  />
+  {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
+  <Button
+    type="submit"
+    fullWidth
+    variant="contained"
+    sx={{
+      mt: 3,
+      mb: 2,
+      borderRadius: 20,
+      backgroundColor: "#32348c",
+      color: "#fff",
+    }}
+  >
+    Sign In
+  </Button>
+</form>
+
             </Container>
           </ThemeProvider>
         </div>

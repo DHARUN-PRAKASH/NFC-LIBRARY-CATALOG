@@ -29,14 +29,14 @@ const AppBarComponent = () => {
   };
 
   const handleLogout = () => {
-    console.log("Logging out...");
-    handleAccountMenuClose();
+    sessionStorage.removeItem('logged');
+    window.location.assign("/")
   };
 
   return (
     <Box>
       {/* Main AppBar */}
-      <MuiAppBar position="sticky" sx={{ backgroundColor: '#1976d2' }}>
+      <MuiAppBar position="sticky" sx={{ backgroundColor: '#1976d2',borderRadius:'10px' }}>
         <Toolbar>
           {/* Menu Icon to open Drawer */}
           <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={handleDrawerToggle}>
@@ -56,7 +56,7 @@ const AppBarComponent = () => {
       </MuiAppBar>
 
       {/* Drawer for navigation */}
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
+      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle} >
         <Box sx={{ width: 250 }} role="presentation">
           <List>
             <ListItem button onClick={() => handleNavigate('home')}>
@@ -92,6 +92,7 @@ const AppBarComponent = () => {
         transformOrigin={{
           vertical: 'top',
           horizontal: 'right',
+        
         }}
       >
         <MenuItem onClick={() => console.log("Viewing Profile")}>Profile</MenuItem>

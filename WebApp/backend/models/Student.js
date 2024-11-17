@@ -5,15 +5,19 @@ const studentSchema = new mongoose.Schema({
   department: String,
   roll_no: { type: String, unique: true },
   mobile: String,
-  attendance: [{ type: Date }],
-  no_of_days: { type: Number, default: 0 },
+  attendance: [{ type: Date }], // Stores attendance dates
+  no_of_days: { type: Number, default: 0 }, // Total attendance days
+
   borrowed_books: [
     {
-      book_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
-      due_date: Date,
-      fine: { type: Number, default: 0 },
+      title: { type: String}, // Reference to the book
+      borrowed_date: { type: Date }, // Date when the book was borrowed
+      due_date: { type: Date }, // Due date for returning the book
+      fine: { type: Number, default: 0 }, // Fine for late return of this book
     },
   ],
+
+  total_fine: { type: Number, default: 0 }, // Total fine accumulated by the student
 });
 
 module.exports = mongoose.model('Student', studentSchema);

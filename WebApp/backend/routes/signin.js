@@ -1,20 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const signInService = require('../services/signinService'); // Import the sign-in service
+const Account = require('../models/account'); // Import the account model
 
-// POST route for sign-in
-router.post('/signin', async (req, res) => {
+// Sign-In Logic (Service + Controller)
+router.post('/', async (req, res) => {
+  const { username, password } = req.body;
+
   try {
-    const { username, password } = req.body;
+    // Validate inputs
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Username and password are required' });
+    }
 
-    // Call the sign-in service with the provided credentials
-    const credentials = await signInService(username, password);
+    // Find the user in the database
+    const user = await Account.findOne({ username, password });
 
-    // If successful, send the credentials as response
-    res.json(credentials);
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Respond with user details if authentication is successful
+    res.status(200).json({
+      username: user.username,
+      password: user.password, // Optional: Avoid sending passwords in production
+    });
   } catch (error) {
-    // Return the appropriate error message based on the error type
-    res.status(400).json({ message: error.message });
+    // Handle unexpected errors
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
 
