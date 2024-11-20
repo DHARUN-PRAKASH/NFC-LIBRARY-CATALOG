@@ -3,7 +3,7 @@ POST http://localhost:5000/attendance
 Content-Type: application/json
 
 {
-  "nfc_data": "Student Details Name: arun Department: Al & DS Roll-no: 22AD110 Mobile: 1234567890"
+  "nfc_data": "Student Details Name: Selvarasan Department: Al & DS Roll-no: 22AD093 Mobile:9361247573"
 }
 
 ### NFC Data Test - Book
@@ -46,7 +46,7 @@ POST http://localhost:5000/library/select-action
 Content-Type: application/json
 
 {
-  "action": "return"
+  "action": "borrow"
   
 }
 
@@ -55,7 +55,7 @@ POST http://localhost:5000/library
 Content-Type: application/json
 
  {
-  "nfc_data": "Student Details Name: arun G Department: Al & DS Roll-no: 22AD110 Mobile: 1234567890"
+  "nfc_data": "Student Details Name: Selvarasan Department: Al & DS Roll-no: 22AD093 Mobile:9361247573"
 }
 
 ### NFC Data Test - Book
@@ -63,13 +63,19 @@ POST http://localhost:5000/library
 Content-Type: application/json
 
 {
-  "nfc_data":"Book Details title: The Enchanted Forest  author: Ava Green genre: Fantasy "
+  "nfc_data":"Book Details book_id:BK001 title:Introduction to AI  author: John Doe genre: Technology "
 
 }
 
 ### Close the active session
 POST http://localhost:5000/library/stop-session
 Content-Type: application/json
+
+### GET Students
+GET http://localhost:5000/students
+
+### GET Books
+GET http://localhost:5000/books
 
 
 

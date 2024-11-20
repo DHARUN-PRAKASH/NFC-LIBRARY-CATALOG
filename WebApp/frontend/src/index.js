@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SignIn from './SignIn';
 import AttendanceDisplay from './components/AttendanceDisplay';
 import Home from './pages/Home';
+import BorrowReturnDisplay from './components/BorrowReturnDisplay';
 
 
 
@@ -15,8 +16,8 @@ root.render(
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/attendance" element={<AttendanceDisplay />} />
-        {/* <Route path="/borrow-book" element={<BorrowBook />} />
-        <Route path="/return-book" element={<ReturnBook />} /> */}
+        <Route path="/borrow-book" element={<BorrowReturnDisplay />} />
+        <Route path="/return-book" element={<BorrowReturnDisplay />} />
         </Routes>
       </BrowserRouter>
     )

@@ -10,6 +10,7 @@ const studentSchema = new mongoose.Schema({
 
   borrowed_books: [
     {
+      book_id: { type: String, unique: true },
       title: { type: String}, // Reference to the book
       borrowed_date: { type: Date }, // Date when the book was borrowed
       due_date: { type: Date }, // Due date for returning the book

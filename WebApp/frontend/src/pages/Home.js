@@ -1,29 +1,41 @@
-import * as React from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import ButtonBase from "@mui/material/ButtonBase";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import AppBarComponent from "../AppBar";
+
+// Import SVGs
+import AttendanceIcon from "../assets/attendance.svg";
+import BorrowIcon from "../assets/borrow.svg";
+import ReturnIcon from "../assets/return.svg";
+import TabsWithDataGrid from "../components/TabsWithDataGrid";
+
+axios.defaults.baseURL = "http://localhost:5000/library";
 
 const images = [
   {
-    url: "https://via.placeholder.com/400x300",
+    svg: AttendanceIcon,
     title: "Attendance",
     width: "33.33%",
-    route: "/attendance", // Route to navigate
+    route: "/attendance",
+    action: null, // No session action needed
   },
   {
-    url: "https://via.placeholder.com/400x300",
+    svg: BorrowIcon,
     title: "Borrow Book",
     width: "33.33%",
-    route: "/borrow-book", // Route to navigate
+    route: "/borrow-book",
+    action: "borrow", // Session action for borrow
   },
   {
-    url: "https://via.placeholder.com/400x300",
+    svg: ReturnIcon,
     title: "Return Book",
     width: "33.33%",
-    route: "/return-book", // Route to navigate
+    route: "/return-book",
+    action: "return", // Session action for return
   },
 ];
 
@@ -51,28 +63,6 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
   },
 }));
 
-const ImageSrc = styled("span")({
-  position: "absolute",
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  backgroundSize: "cover",
-  backgroundPosition: "center 40%",
-});
-
-const Image = styled("span")(({ theme }) => ({
-  position: "absolute",
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: theme.palette.common.white,
-}));
-
 const ImageBackdrop = styled("span")(({ theme }) => ({
   position: "absolute",
   left: 0,
@@ -95,37 +85,57 @@ const ImageMarked = styled("span")(({ theme }) => ({
 }));
 
 export default function Home() {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
-  const handleNavigation = (route) => {
-    navigate(route);
+  const handleNavigation = async (image) => {
+    if (image.action) {
+      try {
+        const response = await axios.post("/select-action", {
+          action: image.action,
+        });
+        console.log(`Action set to ${image.action}`, response.data.message);
+      } catch (error) {
+        console.error("Error setting action:", error.response?.data || error);
+        alert(
+          error.response?.data?.message || "Failed to set action. Please try again."
+        );
+        return;
+      }
+    }
+    navigate(image.route);
   };
 
   return (
     <div>
-      <AppBarComponent/>
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        gap: 2,
-        padding: 2,
-        backgroundColor: "#f9f9f9",
-        flexWrap: "nowrap",
-      }}
-    >
-      {images.map((image) => (
-        <ImageButton
-          focusRipple
-          key={image.title}
-          onClick={() => handleNavigation(image.route)} // Navigate on click
-          style={{
-            width: image.width,
-          }}
-        >
-          <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
-          <ImageBackdrop className="MuiImageBackdrop-root" />
-          <Image>
+      <AppBarComponent />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 2,
+          padding: 2,
+          flexWrap: "nowrap",
+        }}
+      >
+        {images.map((image) => (
+          <ImageButton
+            focusRipple
+            key={image.title}
+            onClick={() => handleNavigation(image)}
+            style={{
+              width: image.width,
+            }}
+          >
+            <img
+              src={image.svg}
+              alt={image.title}
+              style={{
+                width: "50%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
+            <ImageBackdrop className="MuiImageBackdrop-root" />
             <Typography
               component="span"
               variant="h6"
@@ -140,10 +150,10 @@ export default function Home() {
               {image.title}
               <ImageMarked className="MuiImageMarked-root" />
             </Typography>
-          </Image>
-        </ImageButton>
-      ))}
-    </Box>
+          </ImageButton>
+        ))}
+      </Box>
+      <TabsWithDataGrid />
     </div>
   );
 }
