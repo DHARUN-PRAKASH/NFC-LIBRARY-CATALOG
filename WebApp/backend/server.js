@@ -11,7 +11,10 @@ const signInRoutes = require('./routes/signin');
 const libraryRoutes = require('./routes/library');
 const bookRoutes = require('./routes/books'); // Import Book routes
 const studentRoutes = require('./routes/students'); // Import Student routes
+const updateAllStudentsFines = require('./cron/fineUpdater'); // Import fine updater
 const morgan = require('morgan'); // Logging middleware
+const cron = require('node-cron'); // Cron job scheduling
+
 
 const app = express();
 const server = http.createServer(app);
@@ -23,6 +26,8 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev')); // Logs HTTP requests
+// Add this line to include the route
+app.use('/students', studentRoutes);
 
 // MongoDB Connection
 connectDB(); // Connect to the MongoDB database
@@ -40,7 +45,7 @@ app.use('/library', libraryRoutes);
 app.use('/books', bookRoutes); // Add Book routes
 app.use('/students', studentRoutes); // Add Student routes
 
-// Global Error Handler (optional)
+// Global Error Handler
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
@@ -72,9 +77,17 @@ const initializeNotifications = async () => {
   }
 };
 
-// Set up periodic notification sending (e.g., once a day using setInterval)
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-setInterval(initializeNotifications, ONE_DAY_MS);
+// Set up periodic notification sending (e.g., once a day at midnight using cron)
+cron.schedule('0 0 * * *', () => {
+  console.log('🔔 Sending daily notifications...');
+  initializeNotifications();
+});
+
+// Set up daily fine updating (e.g., at midnight using cron)
+cron.schedule('0 0 * * *', () => {
+  console.log('🔧 Updating student fines...');
+  updateAllStudentsFines();
+});
 
 // Start the server
 const PORT = 5000;
@@ -83,6 +96,7 @@ server.listen(PORT, () => {
   console.log(`🚀 Server is running on http://${serverIP}:${PORT}`);
   console.log(`🌐 WebSocket server listening on ws://${serverIP}:${PORT}`);
 
-  // Trigger initial notification sending
+  // Trigger initial fine update and notification sending
+  updateAllStudentsFines();
   initializeNotifications();
 });

@@ -55,7 +55,8 @@ POST http://localhost:5000/library
 Content-Type: application/json
 
  {
-  "nfc_data": "Student Details Name: Selvarasan Department: Al & DS Roll-no: 22AD093 Mobile:9361247573"
+  "nfc_data":  "Student Details Name: Vetrikanth G Department: Al & DS Roll-no: 22AD105 Mobile: 1234567890"
+
 }
 
 ### NFC Data Test - Book
@@ -63,7 +64,7 @@ POST http://localhost:5000/library
 Content-Type: application/json
 
 {
-  "nfc_data":"Book Details book_id:BK001 title:Introduction to AI  author: John Doe genre: Technology "
+  "nfc_data":"Book Details book_id:BK003 title:Deep Learning Insights  author: Mark Johnson genre:Technology "
 
 }
 
@@ -77,6 +78,8 @@ GET http://localhost:5000/students
 ### GET Books
 GET http://localhost:5000/books
 
+### MANUAL FINR UPDATE 
+POST http://localhost:5000/students/update-fines
 
 
 

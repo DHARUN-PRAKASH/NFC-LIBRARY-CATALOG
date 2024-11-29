@@ -119,28 +119,53 @@ router.post('/stop-session', async (req, res) => {
   try {
     const { action, student, books } = librarySession;
 
-    if (action === 'borrow') {
-      for (const book of books) {
-        book.available_pieces -= 1; // Decrease available pieces for borrowed books
+if (action === 'borrow') {
+  for (const book of books) {
+    book.available_pieces -= 1; // Decrease available pieces for borrowed books
 
-        if (!book.borrowed_by.some(borrower => borrower.roll_no === student.roll_no)) {
-          book.borrowed_by.push({
-            roll_no: student.roll_no,
-            title: book.title, // Add title to borrowed_by
-            book_id: book.book_id, // Add book_id to borrowed_by
-            due_date: new Date(new Date().setDate(new Date().getDate() + 14)),
-          });
-        }
+    // Add the student to the list of borrowers for the book if not already present
+    if (!book.borrowed_by.some(borrower => borrower.roll_no === student.roll_no)) {
+      book.borrowed_by.push({
+        roll_no: student.roll_no,
+        title: book.title, // Add title to borrowed_by
+        book_id: book.book_id, // Add book_id to borrowed_by
+        due_date: new Date(new Date().getTime() + 5 * 60 * 1000), // Set due_date to 5 minutes from now
+      });
+    }
 
-        student.borrowed_books.push({
-          book_id: book.book_id, // Reference to book
-          title: book.title, // Add title to borrowed_books
-          borrowed_date: new Date(),
-          due_date: new Date(new Date().setDate(new Date().getDate() + 14)),
-        });
+    // Add the book to the student's borrowed books list
+    student.borrowed_books.push({
+      book_id: book.book_id, // Reference to book
+      title: book.title, // Add title to borrowed_books
+      borrowed_date: new Date(), // Current time as borrowed_date
+      due_date: new Date(new Date().getTime() + 5 * 60 * 1000), // Set due_date to 5 minutes from now
+    });
 
-        await book.save();
-      }
+    await book.save(); // Save the book document
+  }
+
+  // if (action === 'borrow') {
+  //   for (const book of books) {
+  //     book.available_pieces -= 1; // Decrease available pieces for borrowed books
+
+  //     if (!book.borrowed_by.some(borrower => borrower.roll_no === student.roll_no)) {
+  //       book.borrowed_by.push({
+  //         roll_no: student.roll_no,
+  //         title: book.title, // Add title to borrowed_by
+  //         book_id: book.book_id, // Add book_id to borrowed_by
+  //         due_date: new Date(new Date().setDate(new Date().getDate() + 14)),
+  //       });
+  //     }
+
+  //     student.borrowed_books.push({
+  //       book_id: book.book_id, // Reference to book
+  //       title: book.title, // Add title to borrowed_books
+  //       borrowed_date: new Date(),
+  //       due_date: new Date(new Date().setDate(new Date().getDate() + 14)),
+  //     });
+
+  //     await book.save();
+  //   }
     } else if (action === 'return') {
       for (const book of books) {
         book.borrowed_by = book.borrowed_by.filter(borrower => borrower.roll_no !== student.roll_no);
