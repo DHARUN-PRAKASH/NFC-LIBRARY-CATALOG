@@ -33,7 +33,7 @@ function AttendanceDisplay() {
           {nfcData ? (
             <Box sx={{ textAlign: 'left' }}>
               <Box display="flex" justifyContent="center" mb={2}>
-                <Avatar sx={{ color:'#ffe393', width: 72, height: 72 }}>
+              <Avatar sx={{ bgcolor: "#ffe393",color:"#455a64", width: 72, height: 72 }}>
                   <AccountCircleIcon  sx={{ fontSize: 40 ,color:"#455a64"}} />
                 </Avatar>
               </Box>
@@ -47,7 +47,7 @@ function AttendanceDisplay() {
               <Typography variant="body1" color="#ffe393"><strong>Mobile:</strong> {nfcData.student.mobile}</Typography>
 
               <Divider sx={{ my: 3 , backgroundColor:"#ffe393"}} />
-              <Typography variant="body2" color="#ffe393" sx={{ mt: 2 }}>
+              <Typography variant="body2" color="#ffe393" sx={{ mt: 2,    display: 'flex',justifyContent: 'center',alignItems: 'center' }}>
                 {nfcData.message}
               </Typography>
             </Box>

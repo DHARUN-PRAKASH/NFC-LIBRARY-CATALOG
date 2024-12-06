@@ -81,52 +81,73 @@ function BorrowReturnDisplay() {
           <Typography variant="h4" gutterBottom color="#ffe393" sx={{ fontWeight: "bold" }}>
             Library Borrow/Return System
           </Typography>
-          <Divider sx={{ my: 3 }} />
+          <Divider sx={{ my: 3,      backgroundColor: '#ffe393' }} />
 
           {studentData ? (
             <Box sx={{ textAlign: "left" }}>
               <Box display="flex" justifyContent="center" mb={2}>
-                <Avatar sx={{ bgcolor: "primary.main", width: 72, height: 72 }}>
+                <Avatar sx={{ bgcolor: "#ffe393",color:"#455a64", width: 72, height: 72 }}>
                   <LibraryBooksIcon sx={{ fontSize: 40 }} />
                 </Avatar>
               </Box>
 
-              <Typography variant="h6" color="#ffe393" gutterBottom >
-                Student Session Started
+              <Typography variant="h6" color="#ffe393" gutterBottom  >
+                <b>Student Session Started</b>
               </Typography>
+              <Box mb={2} p={1} border={1} borderColor="#ffe393" borderRadius={2}>
+              
               <Typography variant="body1" color="#ffe393"><strong>Name:</strong> {studentData.name}</Typography>
               <Typography variant="body1" color="#ffe393"><strong>Department:</strong> {studentData.department}</Typography>
               <Typography variant="body1" color="#ffe393"><strong>Roll No:</strong> {studentData.roll_no}</Typography>
               <Typography variant="body1" color="#ffe393"><strong>Mobile:</strong> {studentData.mobile}</Typography>
-
-              <Divider sx={{ my: 3 }} />
-              <Typography variant="h6" color="#ffe393" gutterBottom>
-                Books {action === "borrow" ? "to Borrow" : "to Return"}
+              </Box>
+              <Divider sx={{ my: 3,      backgroundColor: '#ffe393' }} />
+              <Typography variant="h6" color="#ffe393" gutterBottom >
+                <b>Books {action === "borrow" ? "to Borrow" : "to Return"}</b>
               </Typography>
 
-              <List>
-                {bookData.map((book, index) => (
-                  <ListItem key={index} disableGutters>
-                    <ListItemText color="#ffe393"
-                      primary={`Title: ${book.title}`}
-                      secondary={`Author: ${book.author} | Genre: ${book.genre}`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
 
-              <Divider sx={{ my: 3 }} />
-              <Typography variant="body2" color="#ffe393" sx={{ mt: 2 }}>
+              <Box>
+  {bookData.map((book, index) => (
+    <Box key={index} mb={2} p={1} border={1} borderColor="#ffe393" borderRadius={2}>
+      <Typography variant="body1" color="#ffe393">
+        <strong>Title:</strong> {book.title}
+      </Typography>
+      <Typography variant="body1" color="#ffe393">
+        <strong>Author:</strong> {book.author}
+      </Typography>
+      <Typography variant="body1" color="#ffe393">
+        <strong>Genre:</strong> {book.genre}
+      </Typography>
+    </Box>
+  ))}
+</Box>
+
+
+              <Divider sx={{ my: 3 ,      backgroundColor: '#ffe393'}} />
+              <Typography variant="body2" color="#ffe393" sx={{ mt: 2,display: 'flex',justifyContent: 'center',alignItems: 'center'  }}>
                 {message}
               </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 3 }}
-                onClick={handleStopSession}
-              >
-                End Session
-              </Button>
+              <Box
+  sx={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }}
+>
+  <Button
+    variant="contained"
+    sx={{
+      mt: 3,
+      color: '#455a64',
+      backgroundColor: '#ffe393',
+    }}
+    onClick={handleStopSession}
+  >
+    <b>End Session</b>
+  </Button>
+</Box>
+
             </Box>
           ) : (
             <Box display="flex" flexDirection="column" alignItems="center">
@@ -142,7 +163,9 @@ function BorrowReturnDisplay() {
     }
   }} 
 />
-              <Typography variant="body1" color="#ffe393" sx={{ mt: 2 }}>
+              <Typography variant="body1" color="#ffe393" sx={{ mt: 2,    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center' }}>
                 Please scan a student ID to start the session.
               </Typography>
             </Box>

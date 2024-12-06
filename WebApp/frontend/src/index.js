@@ -6,8 +6,6 @@ import AttendanceDisplay from './components/AttendanceDisplay';
 import Home from './pages/Home';
 import BorrowReturnDisplay from './components/BorrowReturnDisplay';
 
-
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   (sessionStorage.getItem('logged'))

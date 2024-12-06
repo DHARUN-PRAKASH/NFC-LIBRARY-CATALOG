@@ -8,7 +8,7 @@
 // Wi-Fi credentials
 const char* ssid = "Prakash's S23";         // Replace with your Wi-Fi SSID
 const char* password = "123456789";        // Replace with your Wi-Fi password
-const char* serverIP = "192.168.91.102";     // Backend server's IP address
+const char* serverIP = "192.168.1.10";     // Backend server's IP address
 const int serverPort = 5000;               // Backend server port
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
